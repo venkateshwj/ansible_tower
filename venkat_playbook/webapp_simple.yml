@@ -17,20 +17,7 @@
     traffic_manager_profile_name: myTMProfile
     traffic_manager_endpoint_name: endpoint1
 
-  roles:
-    - azure.azure_preview_modules
-
   tasks:
-  - name: Create resource group
-    azure_rm_resourcegroup:
-      name: "{{ resource_group_name }}"
-      location: "{{ location }}"
-
-  - name: Create resource group for app service plan
-    azure_rm_resourcegroup:
-      name: "{{ resource_group_name }}2nd"
-      location: "{{ location }}"
-
   - name: Create App Service Plan
     azure_rm_appserviceplan:
       resource_group: "{{ resource_group_name }}2nd"
@@ -62,31 +49,3 @@
       name: "{{ app_name }}"
       return_publish_profile: true
     register: webapp
-
-  - name: Create Traffic Manager Profile
-    azure_rm_trafficmanagerprofile:
-      resource_group: "{{ resource_group_name }}"
-      name: "{{ traffic_manager_profile_name }}"
-      location: global
-      routing_method: performance
-      dns_config:
-        relative_name: "{{ traffic_manager_profile_name }}"
-        ttl:  60
-      monitor_config:
-        protocol: HTTPS
-        port: 80
-        path: '/'
-
-  - name: Add endpoint to traffic manager profile, using the web site created above
-    azure_rm_trafficmanagerendpoint:
-      resource_group: "{{ resource_group_name }}"
-      profile_name: "{{ traffic_manager_profile_name }}"
-      name: "{{ traffic_manager_endpoint_name }}"
-      type: azure_endpoints
-      location: "{{ location }}"
-      target_resource_id: "{{ webapp.webapps[0].id }}"
-
-  - name: Get Traffic Manager Profile facts
-    azure_rm_trafficmanagerprofile_facts:
-      resource_group: "{{ resource_group_name }}"
-      name: "{{ traffic_manager_profile_name }}"
