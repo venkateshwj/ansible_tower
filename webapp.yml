@@ -17,9 +17,6 @@
     traffic_manager_profile_name: myTMProfile
     traffic_manager_endpoint_name: endpoint1
 
-  roles:
-    - azure.azure_preview_modules
-
   tasks:
   - name: Create resource group
     azure_rm_resourcegroup:
