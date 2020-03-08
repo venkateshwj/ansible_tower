@@ -20,7 +20,7 @@
   tasks:
   - name: Create App Service Plan
     azure_rm_appserviceplan:
-      resource_group: "{{ resource_group_name }}2nd"
+      resource_group: "{{ resource_group_name }}"
       name: "{{ linux_plan_name }}"
       location: "{{ location }}"
       is_linux: true
@@ -32,7 +32,7 @@
       resource_group: "{{ resource_group_name }}"
       name: "{{ app_name }}"
       plan:
-        resource_group: "{{ resource_group_name }}2nd"
+        resource_group: "{{ resource_group_name }}"
         name: "{{ linux_plan_name }}"
       app_settings:
         testkey: "testvalue"
