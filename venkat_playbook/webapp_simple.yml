@@ -18,34 +18,17 @@
     traffic_manager_endpoint_name: endpoint1
 
   tasks:
-  - name: Create App Service Plan
-    azure_rm_appserviceplan:
-      resource_group: "{{ resource_group_name }}"
-      name: "{{ linux_plan_name }}"
-      location: "{{ location }}"
-      is_linux: true
-      sku: S1
-      number_of_workers: 1
-
-  - name: Create a Linux web app with Java framework and Tomcat
-    azure_rm_webapp:
-      resource_group: "{{ resource_group_name }}"
-      name: "{{ app_name }}"
-      plan:
-        resource_group: "{{ resource_group_name }}"
-        name: "{{ linux_plan_name }}"
-      app_settings:
-        testkey: "testvalue"
-      frameworks:
-        - name: java
-          version: 8
-          settings:
-            java_container: "Tomcat"
-            java_container_version: "8.5"
-
-  - name: Get web app facts
-    azure_rm_webapp_facts:
-      resource_group: "{{ resource_group_name }}"
-      name: "{{ app_name }}"
-      return_publish_profile: true
-    register: webapp
+  - name: terraform set up
+    terraform:
+        project_path: './../terraform'
+        state: "present"
+        force_init: true
+        backend_config:
+          arm_subscription_id: "{{ arm_subscription_id }}"
+          arm_client_id: "{{ arm_client_id }}"
+          arm_client_secret: "{{ arm_client_secret }}"
+          arm_tenant_id: "{{ arm_tenant_id }}"
+          resource_group_name: "{{ resource_group_name }}"
+          storage_account_name: "{{ storage_account_name }}"
+          container_name: "{{ container_name }}"
+          key: "{{ app_name }}"
